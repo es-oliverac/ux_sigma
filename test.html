@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGMA AUTOS — Design System</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="styles/main.css">
+
+  <style>
+    /* Test page specific styles */
+    .test-page { padding: var(--space-8) var(--space-6); max-width: var(--container-wide); margin: auto; }
+    .test-section { margin-bottom: var(--space-16); }
+    .test-section__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-2);
+      color: var(--sigma-white);
+    }
+    .test-section__desc {
+      font-size: var(--fs-sm);
+      color: var(--neutral-500);
+      margin-bottom: var(--space-8);
+      border-bottom: var(--border-default);
+      padding-bottom: var(--space-4);
+    }
+    .test-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      align-items: flex-start;
+      margin-bottom: var(--space-6);
+    }
+    .test-row--col {
+      flex-direction: column;
+    }
+    .test-label {
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--neutral-500);
+      margin-bottom: var(--space-2);
+    }
+
+    /* Color swatches */
+    .swatch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-3);
+    }
+    .swatch {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: var(--border-default);
+    }
+    .swatch__color {
+      height: 64px;
+    }
+    .swatch__info {
+      padding: var(--space-2) var(--space-3);
+      background: var(--neutral-900);
+    }
+    .swatch__name {
+      font-size: var(--fs-xs);
+      font-weight: 600;
+      color: var(--neutral-300);
+    }
+    .swatch__value {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--neutral-500);
+    }
+
+    /* Type specimen */
+    .type-specimen {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      border-left: 2px solid var(--neutral-800);
+      padding-left: var(--space-6);
+    }
+    .type-sample {
+      display: flex;
+      align-items: baseline;
+      gap: var(--space-6);
+    }
+    .type-sample__size {
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--neutral-500);
+      width: 90px;
+      flex-shrink: 0;
+      text-align: right;
+    }
+
+    /* Skeleton samples */
+    .skeleton-row {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-3);
+      width: 340px;
+    }
+    .skeleton--title { height: 20px; width: 60%; }
+    .skeleton--text { height: 14px; width: 100%; }
+    .skeleton--text-short { height: 14px; width: 75%; }
+    .skeleton--image { height: 180px; width: 100%; border-radius: var(--radius-lg); }
+    .skeleton--avatar { height: 32px; width: 32px; border-radius: var(--radius-full); }
+
+    /* Cards row */
+    .cards-showcase {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: var(--space-6);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="test-page">
+
+    <!-- Page header -->
+    <header style="margin-bottom: var(--space-12);">
+      <h1 style="font-size: var(--fs-2xl); margin-bottom: var(--space-2);">
+        <span style="color: var(--sigma-blue);">SIGMA</span> AUTOS
+      </h1>
+      <p style="color: var(--neutral-500); font-size: var(--fs-lg);">Design System — Tokens, Components & Patterns</p>
+    </header>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- COLOR PALETTE -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Color Palette</h2>
+      <p class="test-section__desc">Primary, neutral, and semantic colors. Blue is the sole accent.</p>
+
+      <div class="test-label">Primary</div>
+      <div class="swatch-grid" style="margin-bottom: var(--space-6);">
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--sigma-blue);"></div>
+          <div class="swatch__info"><div class="swatch__name">Sigma Blue</div><div class="swatch__value">#0A4FE8</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--sigma-blue-hover);"></div>
+          <div class="swatch__info"><div class="swatch__name">Blue Hover</div><div class="swatch__value">#0940C2</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--sigma-blue-glow);"></div>
+          <div class="swatch__info"><div class="swatch__name">Blue Glow</div><div class="swatch__value">#3B7BFF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--sigma-black);"></div>
+          <div class="swatch__info"><div class="swatch__name">Sigma Black</div><div class="swatch__value">#0A0A0B</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--sigma-white); border: 1px solid var(--neutral-700);"></div>
+          <div class="swatch__info"><div class="swatch__name">Sigma White</div><div class="swatch__value">#FFFFFF</div></div>
+        </div>
+      </div>
+
+      <div class="test-label">Neutrals</div>
+      <div class="swatch-grid" style="margin-bottom: var(--space-6);">
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-950);"></div>
+          <div class="swatch__info"><div class="swatch__name">950</div><div class="swatch__value">#08090C</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-900);"></div>
+          <div class="swatch__info"><div class="swatch__name">900</div><div class="swatch__value">#111216</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-800);"></div>
+          <div class="swatch__info"><div class="swatch__name">800</div><div class="swatch__value">#1A1C22</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-700);"></div>
+          <div class="swatch__info"><div class="swatch__name">700</div><div class="swatch__value">#2A2D36</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-500);"></div>
+          <div class="swatch__info"><div class="swatch__name">500</div><div class="swatch__value">#6B7280</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-400);"></div>
+          <div class="swatch__info"><div class="swatch__name">400</div><div class="swatch__value">#9CA3AF</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-300);"></div>
+          <div class="swatch__info"><div class="swatch__name">300</div><div class="swatch__value">#D1D5DB</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--neutral-100);"></div>
+          <div class="swatch__info"><div class="swatch__name">100</div><div class="swatch__value">#F4F5F7</div></div>
+        </div>
+      </div>
+
+      <div class="test-label">Semantic</div>
+      <div class="swatch-grid">
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--success);"></div>
+          <div class="swatch__info"><div class="swatch__name">Success</div><div class="swatch__value">#10B981</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--danger);"></div>
+          <div class="swatch__info"><div class="swatch__name">Danger</div><div class="swatch__value">#EF4444</div></div>
+        </div>
+        <div class="swatch">
+          <div class="swatch__color" style="background: var(--warning);"></div>
+          <div class="swatch__info"><div class="swatch__name">Warning</div><div class="swatch__value">#F59E0B</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TYPOGRAPHY -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Typography</h2>
+      <p class="test-section__desc">Three font families: Display (Archivo Black), Body (Inter), Mono (JetBrains Mono).</p>
+
+      <div class="test-label">Display — Archivo Black</div>
+      <div class="type-specimen" style="margin-bottom: var(--space-8);">
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-hero</span>
+          <span style="font-family: var(--font-display); font-size: var(--fs-hero); line-height: 0.95; text-transform: uppercase;">SIGMA</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-3xl</span>
+          <span style="font-family: var(--font-display); font-size: var(--fs-3xl); line-height: 1; text-transform: uppercase;">SUBASTAS</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-2xl</span>
+          <span style="font-family: var(--font-display); font-size: var(--fs-2xl); line-height: 1.1; text-transform: uppercase;">EN VIVO AHORA</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-xl</span>
+          <span style="font-family: var(--font-display); font-size: var(--fs-xl); line-height: 1.2;">Porsche 911 Carrera S</span>
+        </div>
+      </div>
+
+      <div class="test-label">Body — Inter</div>
+      <div class="type-specimen" style="margin-bottom: var(--space-8);">
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-lg / 18</span>
+          <span style="font-size: var(--fs-lg); color: var(--neutral-300);">La plataforma de subastas de autos más transparente de Latinoamérica.</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-base / 16</span>
+          <span style="font-size: var(--fs-base); color: var(--neutral-300);">Cada auto es verificado por nuestro equipo antes de publicarse.</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-sm / 14</span>
+          <span style="font-size: var(--fs-sm); color: var(--neutral-400);">45,000 km · Lima · Automático · 3.0L Twin-Turbo</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">--fs-xs / 12</span>
+          <span style="font-size: var(--fs-xs); color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.1em;">PUJA ACTUAL · TIEMPO RESTANTE</span>
+        </div>
+      </div>
+
+      <div class="test-label">Mono — JetBrains Mono (prices, timers, bids)</div>
+      <div class="type-specimen">
+        <div class="type-sample">
+          <span class="type-sample__size">Price XL</span>
+          <span class="mono" style="font-size: var(--fs-2xl); font-weight: 700;">$189,500</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">Price LG</span>
+          <span class="mono" style="font-size: var(--fs-xl); font-weight: 700;">$89,500 USD</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">Timer</span>
+          <span class="mono" style="font-size: var(--fs-xl); font-weight: 600;">02:14:37</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">Timer warn</span>
+          <span class="mono" style="font-size: var(--fs-xl); font-weight: 600; color: var(--warning);">00:04:52</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">Timer crit</span>
+          <span class="mono" style="font-size: var(--fs-xl); font-weight: 600; color: var(--danger);">00:00:08</span>
+        </div>
+        <div class="type-sample">
+          <span class="type-sample__size">Bid count</span>
+          <span class="mono" style="font-size: var(--fs-sm); color: var(--neutral-400);">23 pujas · 18 watching</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- BUTTONS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Buttons</h2>
+      <p class="test-section__desc">Primary, outline, ghost, danger, success. Sizes: SM, MD (default), LG, XL.</p>
+
+      <div class="test-label">Variants</div>
+      <div class="test-row">
+        <button class="btn btn--primary">
+          <i data-lucide="gavel" style="width:16px;height:16px;"></i>
+          Pujar Ahora
+        </button>
+        <button class="btn btn--outline">
+          <i data-lucide="plus" style="width:16px;height:16px;"></i>
+          Publicar Auto
+        </button>
+        <button class="btn btn--ghost">
+          <i data-lucide="eye" style="width:16px;height:16px;"></i>
+          Watchlist
+        </button>
+        <button class="btn btn--danger">
+          <i data-lucide="x" style="width:16px;height:16px;"></i>
+          Cancelar
+        </button>
+        <button class="btn btn--success">
+          <i data-lucide="trophy" style="width:16px;height:16px;"></i>
+          Vas Ganando
+        </button>
+      </div>
+
+      <div class="test-label">Sizes</div>
+      <div class="test-row" style="align-items: center;">
+        <button class="btn btn--primary btn--sm">Small</button>
+        <button class="btn btn--primary">Default</button>
+        <button class="btn btn--primary btn--lg">Large</button>
+        <button class="btn btn--primary btn--xl">Extra Large</button>
+      </div>
+
+      <div class="test-label">States</div>
+      <div class="test-row" style="align-items: center;">
+        <button class="btn btn--primary" disabled>Disabled</button>
+        <button class="btn btn--primary btn--loading">Loading</button>
+        <button class="btn btn--primary btn--full" style="max-width: 340px;">
+          <i data-lucide="gavel" style="width:18px;height:18px;"></i>
+          PUJAR $89,600 (+$100)
+        </button>
+      </div>
+
+      <div class="test-label">Bid Button (styled)</div>
+      <div style="max-width: 380px;">
+        <button class="btn btn--primary btn--xl btn--full" id="bid-demo-btn">
+          <i data-lucide="gavel" style="width:20px;height:20px;"></i>
+          PUJAR $89,600 (+$100)
+        </button>
+        <div style="text-align: center; margin-top: var(--space-2);">
+          <span style="font-size: var(--fs-xs); color: var(--neutral-500);">Clic para ver micro-interacción</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- INPUTS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Inputs</h2>
+      <p class="test-section__desc">Form fields with labels, helpers, errors, and validation states.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-6);">
+        <div class="input-group">
+          <label class="input-label" for="input-name">Nombre completo <span class="required">*</span></label>
+          <input class="input" type="text" id="input-name" placeholder="Ingresa tu nombre">
+          <span class="input-helper">Como aparece en tu documento.</span>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="input-email">Correo electrónico <span class="required">*</span></label>
+          <input class="input input--error" type="email" id="input-email" value="user@invalid" aria-invalid="true" aria-describedby="email-error">
+          <span class="input-error" id="email-error">Correo electrónico inválido.</span>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="input-bid">Monto de puja</label>
+          <input class="input" type="text" id="input-bid" value="$89,600" style="font-family: var(--font-mono); font-weight: 600;">
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="input-select">Marca del vehículo</label>
+          <select class="input select" id="input-select">
+            <option value="">Seleccionar marca...</option>
+            <option>Porsche</option>
+            <option>BMW</option>
+            <option>Mercedes-Benz</option>
+            <option>Audi</option>
+          </select>
+        </div>
+
+        <div class="input-group" style="grid-column: span 2;">
+          <label class="input-label" for="input-textarea">Descripción del vehículo</label>
+          <textarea class="input textarea" id="input-textarea" placeholder="Describe el estado, historial de mantenimiento, modificaciones..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- CHIPS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Chips</h2>
+      <p class="test-section__desc">Filter chips with counters. Active and removable states.</p>
+
+      <div class="test-label">Filter Chips</div>
+      <div class="test-row">
+        <button class="chip chip--active">Porsche <span class="chip__count">12</span></button>
+        <button class="chip">BMW <span class="chip__count">8</span></button>
+        <button class="chip">Mercedes-Benz <span class="chip__count">15</span></button>
+        <button class="chip">Audi <span class="chip__count">6</span></button>
+        <button class="chip">Ferrari <span class="chip__count">3</span></button>
+        <button class="chip">Lamborghini <span class="chip__count">2</span></button>
+        <button class="chip">Toyota <span class="chip__count">24</span></button>
+      </div>
+
+      <div class="test-label">Applied Filters (removable)</div>
+      <div class="test-row">
+        <button class="chip chip--active chip--removable">Porsche <span class="chip__remove" aria-label="Quitar filtro">&times;</span></button>
+        <button class="chip chip--active chip--removable">2020-2024 <span class="chip__remove" aria-label="Quitar filtro">&times;</span></button>
+        <button class="chip chip--active chip--removable">< 50,000 km <span class="chip__remove" aria-label="Quitar filtro">&times;</span></button>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- BADGES -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Badges & Tags</h2>
+      <p class="test-section__desc">Status indicators for auction states.</p>
+
+      <div class="test-row" style="align-items: center;">
+        <span class="badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+        <span class="badge badge--closing"><i data-lucide="clock" style="width:12px;height:12px;"></i> Por Cerrar</span>
+        <span class="badge badge--won"><i data-lucide="trophy" style="width:12px;height:12px;"></i> Ganada</span>
+        <span class="badge badge--closed">Cerrada</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- STAT BLOCKS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Stat Blocks</h2>
+      <p class="test-section__desc">Monospaced data displays for prices, timers, and counts.</p>
+
+      <div class="test-row" style="gap: var(--space-10);">
+        <div class="stat">
+          <span class="stat__label">Puja Actual</span>
+          <span class="stat__value">$89,500</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Tiempo Restante</span>
+          <span class="stat__value" style="color: var(--sigma-white);">02:14:37</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Total Pujas</span>
+          <span class="stat__value">23</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Watching</span>
+          <span class="stat__value" style="color: var(--sigma-blue-glow);">18</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- PROGRESS BARS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Progress Bars</h2>
+      <p class="test-section__desc">Reserve price progress and time remaining indicators.</p>
+
+      <div style="display: flex; flex-direction: column; gap: var(--space-6); max-width: 400px;">
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-2);">
+            <span class="test-label" style="margin:0;">Reserva — 65%</span>
+            <span class="mono" style="font-size: var(--fs-xs); color: var(--neutral-500);">$89,500 / $138,000</span>
+          </div>
+          <div class="progress"><div class="progress__bar" style="width: 65%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-2);">
+            <span class="test-label" style="margin:0;">Reserva cumplida</span>
+          </div>
+          <div class="progress progress--success"><div class="progress__bar" style="width: 100%;"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-2);">
+            <span class="test-label" style="margin:0;">Tiempo — 15% restante</span>
+          </div>
+          <div class="progress progress--warning"><div class="progress__bar" style="width: 15%;"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- LOADING SKELETONS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Loading Skeletons</h2>
+      <p class="test-section__desc">Shimmer loading states with diagonal blue-tinted gradient.</p>
+
+      <div class="test-row" style="gap: var(--space-8);">
+        <div class="skeleton-row">
+          <div class="skeleton skeleton--image"></div>
+          <div class="skeleton skeleton--title"></div>
+          <div class="skeleton skeleton--text"></div>
+          <div class="skeleton skeleton--text-short"></div>
+        </div>
+        <div class="skeleton-row">
+          <div style="display:flex;gap:var(--space-3);align-items:center;">
+            <div class="skeleton skeleton--avatar"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:var(--space-2);">
+              <div class="skeleton" style="height:14px;width:120px;"></div>
+              <div class="skeleton" style="height:12px;width:80px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- AVATARS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Avatars</h2>
+      <p class="test-section__desc">User initials in circle. Sizes: SM, default, LG.</p>
+
+      <div class="test-row" style="align-items: center;">
+        <span class="avatar avatar--sm">JD</span>
+        <span class="avatar">MA</span>
+        <span class="avatar avatar--lg">CR</span>
+        <span class="avatar" style="background: rgba(10, 79, 232, 0.2); color: var(--sigma-blue-glow);">TU</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- CARDS (basic) -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Basic Card</h2>
+      <p class="test-section__desc">Generic card shell with image, body, and footer.</p>
+
+      <div style="max-width: 380px;">
+        <div class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=340&fit=crop" alt="Porsche 911" loading="lazy">
+          </div>
+          <div class="card__body">
+            <h3 class="card__title">2021 Porsche 911 Carrera S</h3>
+            <p class="card__meta">45,000 km · Lima · Automático</p>
+            <p style="font-size: var(--fs-sm); color: var(--neutral-400);">Motor boxer 3.0L twin-turbo, 450hp. Interior en cuero negro, techo panorámico.</p>
+          </div>
+          <div class="card__footer">
+            <div class="stat">
+              <span class="stat__label">Precio base</span>
+              <span class="stat__value stat__value--sm">$85,000</span>
+            </div>
+            <button class="btn btn--primary btn--sm">Ver Subasta</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- AUCTION CARDS (4 variants) -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Auction Cards</h2>
+      <p class="test-section__desc">The core component. 4 variants: Active (live), Closing Soon, Won, Closed.</p>
+
+      <div class="cards-showcase">
+
+        <!-- VARIANT 1: ACTIVE / LIVE -->
+        <article class="auction-card" aria-label="Subasta activa: 2021 Porsche 911 Carrera S">
+          <div class="auction-card__image">
+            <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=600&h=340&fit=crop" alt="2021 Porsche 911 Carrera S" loading="lazy">
+            <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+            <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+          </div>
+          <div class="auction-card__body">
+            <h3 class="auction-card__title">2021 Porsche 911 Carrera S</h3>
+            <div class="auction-card__meta">
+              <span>45,000 km</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Lima</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Automático</span>
+            </div>
+            <div class="auction-card__stats">
+              <div>
+                <div class="auction-card__stat-label">Puja Actual</div>
+                <div class="auction-card__stat-value mono">$89,500</div>
+              </div>
+              <div style="text-align: right;">
+                <div class="auction-card__stat-label">Tiempo</div>
+                <div class="auction-card__stat-value mono">02:14:37</div>
+              </div>
+            </div>
+            <div class="auction-card__bid-info">
+              <span>23 pujas</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span class="watchers">18 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+            </div>
+          </div>
+          <div class="auction-card__footer">
+            <span class="auction-card__reserve-label">Reserva</span>
+            <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 65%;"></div></div>
+            <span class="auction-card__reserve-pct mono">65%</span>
+          </div>
+          <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 68%;"></div></div>
+        </article>
+
+        <!-- VARIANT 2: CLOSING SOON -->
+        <article class="auction-card auction-card--closing" aria-label="Subasta por cerrar: 2019 BMW M4 Competition">
+          <div class="auction-card__image">
+            <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=340&fit=crop" alt="2019 BMW M4 Competition" loading="lazy">
+            <span class="auction-card__badge badge badge--closing"><i data-lucide="clock" style="width:12px;height:12px;"></i> Por Cerrar</span>
+            <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+          </div>
+          <div class="auction-card__body">
+            <h3 class="auction-card__title">2019 BMW M4 Competition</h3>
+            <div class="auction-card__meta">
+              <span>32,000 km</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Bogotá</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Manual</span>
+            </div>
+            <div class="auction-card__stats">
+              <div>
+                <div class="auction-card__stat-label">Puja Actual</div>
+                <div class="auction-card__stat-value mono">$67,200</div>
+              </div>
+              <div style="text-align: right;">
+                <div class="auction-card__stat-label">Tiempo</div>
+                <div class="auction-card__stat-value mono" style="color: var(--warning);">00:04:52</div>
+              </div>
+            </div>
+            <div class="auction-card__bid-info">
+              <span>41 pujas</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span class="watchers">34 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+            </div>
+          </div>
+          <div class="auction-card__footer">
+            <span class="auction-card__reserve-label">Reserva</span>
+            <div class="auction-card__reserve-bar progress progress--success"><div class="progress__bar" style="width: 100%;"></div></div>
+            <span class="auction-card__reserve-pct mono" style="color: var(--success);">Met</span>
+          </div>
+          <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 8%; background: var(--danger);"></div></div>
+        </article>
+
+        <!-- VARIANT 3: WON -->
+        <article class="auction-card auction-card--won" aria-label="Subasta ganada: 2022 Mercedes-AMG GT">
+          <div class="auction-card__image">
+            <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=340&fit=crop" alt="2022 Mercedes-AMG GT" loading="lazy">
+            <span class="auction-card__badge badge badge--won"><i data-lucide="trophy" style="width:12px;height:12px;"></i> Ganada</span>
+          </div>
+          <div class="auction-card__body">
+            <h3 class="auction-card__title">2022 Mercedes-AMG GT</h3>
+            <div class="auction-card__meta">
+              <span>18,500 km</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>CDMX</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Automático</span>
+            </div>
+            <div class="auction-card__stats">
+              <div>
+                <div class="auction-card__stat-label">Precio Final</div>
+                <div class="auction-card__stat-value mono" style="color: var(--success);">$124,800</div>
+              </div>
+              <div style="text-align: right;">
+                <div class="auction-card__stat-label">Estado</div>
+                <div class="auction-card__stat-value" style="font-size: var(--fs-sm); color: var(--success); font-family: var(--font-body); font-weight: 600; text-transform: uppercase;">Finalizada</div>
+              </div>
+            </div>
+            <div class="auction-card__bid-info">
+              <span>67 pujas</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Duración: 7 días</span>
+            </div>
+          </div>
+          <div class="auction-card__footer">
+            <span class="auction-card__reserve-label">Reserva</span>
+            <div class="auction-card__reserve-bar progress progress--success"><div class="progress__bar" style="width: 100%;"></div></div>
+            <span class="auction-card__reserve-pct mono" style="color: var(--success);">Met</span>
+          </div>
+          <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 0%;"></div></div>
+        </article>
+
+        <!-- VARIANT 4: CLOSED (no winner / expired) -->
+        <article class="auction-card auction-card--closed" aria-label="Subasta cerrada: 2020 Audi RS5 Sportback">
+          <div class="auction-card__image">
+            <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=340&fit=crop" alt="2020 Audi RS5 Sportback" loading="lazy">
+            <span class="auction-card__badge badge badge--closed">Cerrada</span>
+          </div>
+          <div class="auction-card__body">
+            <h3 class="auction-card__title">2020 Audi RS5 Sportback</h3>
+            <div class="auction-card__meta">
+              <span>55,000 km</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Santiago</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Automático</span>
+            </div>
+            <div class="auction-card__stats">
+              <div>
+                <div class="auction-card__stat-label">Última Puja</div>
+                <div class="auction-card__stat-value mono" style="color: var(--neutral-500);">$52,300</div>
+              </div>
+              <div style="text-align: right;">
+                <div class="auction-card__stat-label">Estado</div>
+                <div class="auction-card__stat-value" style="font-size: var(--fs-sm); color: var(--neutral-500); font-family: var(--font-body); font-weight: 500;">No vendido</div>
+              </div>
+            </div>
+            <div class="auction-card__bid-info">
+              <span>12 pujas</span>
+              <span class="auction-card__meta-sep">&middot;</span>
+              <span>Reserva no alcanzada</span>
+            </div>
+          </div>
+          <div class="auction-card__footer">
+            <span class="auction-card__reserve-label">Reserva</span>
+            <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 42%;"></div></div>
+            <span class="auction-card__reserve-pct mono">42%</span>
+          </div>
+          <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 0%;"></div></div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- EFFECTS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Effects & Glows</h2>
+      <p class="test-section__desc">Blue glow variants used across the interface.</p>
+
+      <div class="test-row" style="gap: var(--space-8);">
+        <div style="width:120px;height:120px;border-radius:var(--radius-lg);background:var(--neutral-900);border:1px solid var(--sigma-blue);box-shadow:var(--glow-blue-subtle);display:flex;align-items:center;justify-content:center;">
+          <span class="test-label" style="margin:0;">Subtle</span>
+        </div>
+        <div style="width:120px;height:120px;border-radius:var(--radius-lg);background:var(--neutral-900);border:1px solid var(--sigma-blue);box-shadow:var(--glow-blue);display:flex;align-items:center;justify-content:center;">
+          <span class="test-label" style="margin:0;">Default</span>
+        </div>
+        <div style="width:120px;height:120px;border-radius:var(--radius-lg);background:var(--neutral-900);border:1px solid var(--sigma-blue-glow);box-shadow:var(--glow-blue-intense);display:flex;align-items:center;justify-content:center;">
+          <span class="test-label" style="margin:0;">Intense</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- DIVIDER -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Divider</h2>
+      <p class="test-section__desc">1px neutral-800 separator.</p>
+      <hr class="divider">
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- LIVE DOT ANIMATION -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="test-section">
+      <h2 class="test-section__title">Live Indicator</h2>
+      <p class="test-section__desc">Pulsing red dot with ring animation for live auctions.</p>
+
+      <div class="test-row" style="align-items: center; gap: var(--space-8);">
+        <div style="display:flex;align-items:center;gap:var(--space-3);">
+          <span class="live-dot"></span>
+          <span style="font-size: var(--fs-sm); font-weight: 600; text-transform: uppercase; letter-spacing: var(--tracking-wider);">En Vivo</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);">
+          <span class="live-dot"></span>
+          <span class="mono" style="font-size: var(--fs-sm);">247 usuarios conectados</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- BID BUTTON INTERACTION DEMO -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Init Lucide icons
+      if (window.lucide) lucide.createIcons();
+
+      // Bid button burst demo
+      const bidBtn = document.getElementById('bid-demo-btn');
+      if (bidBtn) {
+        bidBtn.addEventListener('click', (e) => {
+          // Scale down
+          bidBtn.style.transform = 'scale(0.97)';
+          setTimeout(() => { bidBtn.style.transform = ''; }, 150);
+
+          // Create burst particles
+          const rect = bidBtn.getBoundingClientRect();
+          const cx = rect.left + rect.width / 2;
+          const cy = rect.top + rect.height / 2;
+
+          for (let i = 0; i < 12; i++) {
+            const particle = document.createElement('div');
+            const angle = (Math.PI * 2 / 12) * i;
+            const distance = 60 + Math.random() * 40;
+            const size = 4 + Math.random() * 4;
+
+            Object.assign(particle.style, {
+              position: 'fixed',
+              left: cx + 'px',
+              top: cy + 'px',
+              width: size + 'px',
+              height: size + 'px',
+              borderRadius: '50%',
+              background: i % 2 === 0 ? 'var(--sigma-blue)' : 'var(--sigma-blue-glow)',
+              pointerEvents: 'none',
+              zIndex: '9999',
+            });
+
+            document.body.appendChild(particle);
+
+            particle.animate([
+              { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+              {
+                transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`,
+                opacity: 0,
+              },
+            ], {
+              duration: 500 + Math.random() * 200,
+              easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+            }).onfinish = () => particle.remove();
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

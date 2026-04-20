@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SIGMA AUTOS — La plataforma de subastas de autos más transparente. Puja en vivo por autos verificados.">
+  <title>SIGMA AUTOS — Subastas de Autos en Vivo</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/main.css">
+
+  <style>
+    /* ── Page-specific: countdown digits ── */
+    .countdown {
+      display: inline-flex;
+      align-items: baseline;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .countdown__digit {
+      display: inline-block;
+      transition: transform 0.2s var(--ease-smooth), color 0.3s ease;
+    }
+    .countdown__digit.flip {
+      animation: digit-flip-in 0.25s var(--ease-smooth);
+    }
+    .countdown__sep {
+      opacity: 0.5;
+      margin: 0 1px;
+    }
+    .countdown--warning { color: var(--warning); }
+    .countdown--danger { color: var(--danger); }
+    .countdown--critical { color: var(--danger); animation: pulse 0.5s ease-in-out infinite; }
+
+    /* ── Ticker ── */
+    .ticker { display: inline-flex; align-items: baseline; }
+    .ticker__digit {
+      display: inline-block;
+      overflow: hidden;
+      position: relative;
+      height: 1.1em;
+    }
+    .ticker__digit-inner {
+      display: block;
+      transition: transform 0.3s var(--ease-smooth);
+    }
+    .ticker__digit-out {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .ticker__static {
+      display: inline-block;
+    }
+
+    /* ── Hero featured card (larger, with live feed) ── */
+    .hero-card {
+      background: var(--neutral-900);
+      border: 1px solid var(--neutral-800);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: var(--glow-blue-subtle);
+    }
+    .hero-card__image {
+      position: relative;
+      aspect-ratio: 16/10;
+      overflow: hidden;
+    }
+    .hero-card__image img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .hero-card__live-badge {
+      position: absolute;
+      top: var(--space-3);
+      left: var(--space-3);
+    }
+    .hero-card__watchers {
+      position: absolute;
+      top: var(--space-3);
+      right: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      font-size: var(--fs-xs);
+      font-family: var(--font-mono);
+      color: var(--sigma-white);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .hero-card__body { padding: var(--space-5); }
+    .hero-card__title {
+      font-family: var(--font-display);
+      font-size: var(--fs-base);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wide);
+      margin-bottom: var(--space-1);
+    }
+    .hero-card__meta {
+      font-size: var(--fs-sm);
+      color: var(--neutral-500);
+      margin-bottom: var(--space-4);
+    }
+    .hero-card__stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      margin-bottom: var(--space-4);
+    }
+    .hero-card__stat-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--neutral-500);
+      margin-bottom: 2px;
+    }
+    .hero-card__stat-value {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      font-size: var(--fs-xl);
+      line-height: 1;
+    }
+    .hero-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--neutral-800);
+      font-size: var(--fs-xs);
+      color: var(--neutral-500);
+    }
+
+    /* ── Stats row (landing page) ── */
+    .stats-banner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--neutral-800);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .stats-banner__item {
+      background: var(--neutral-900);
+      padding: var(--space-6) var(--space-5);
+      text-align: center;
+    }
+    .stats-banner__number {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: var(--fs-2xl);
+      font-variant-numeric: tabular-nums;
+      color: var(--sigma-white);
+      line-height: 1;
+      margin-bottom: var(--space-2);
+    }
+    .stats-banner__label {
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      letter-spacing: var(--tracking-wider);
+      color: var(--neutral-500);
+    }
+    @media (max-width: 768px) {
+      .stats-banner { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-banner { grid-template-columns: 1fr; }
+    }
+
+    /* ── Featured grid with large + small layout ── */
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: var(--space-6);
+    }
+    .featured-grid > :first-child {
+      grid-column: 1 / 3;
+      grid-row: 1 / 3;
+    }
+    @media (max-width: 1024px) {
+      .featured-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      .featured-grid > :first-child {
+        grid-column: 1 / -1;
+        grid-row: auto;
+      }
+    }
+    @media (max-width: 640px) {
+      .featured-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HEADER / NAV -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <header class="site-header" role="banner">
+    <div class="site-header__inner">
+      <a href="index.html" class="site-header__logo" aria-label="SIGMA AUTOS - Inicio">
+        <span class="site-header__logo-sigma">SIGMA</span>
+        <span class="site-header__logo-autos">AUTOS</span>
+      </a>
+
+      <nav class="site-header__nav" role="navigation" aria-label="Navegación principal">
+        <a href="subastas.html" class="site-header__link">Subastas</a>
+        <a href="#como-funciona" class="site-header__link">Cómo Funciona</a>
+        <a href="vender.html" class="site-header__link">Vender</a>
+        <a href="#" class="site-header__link">Resultados</a>
+      </nav>
+
+      <div class="site-header__actions">
+        <a href="vender.html" class="btn btn--outline btn--sm">
+          <i data-lucide="plus" style="width:14px;height:14px;"></i>
+          Publicar Auto
+        </a>
+        <a href="#" class="btn btn--primary btn--sm">Ingresar</a>
+        <button class="menu-toggle" aria-expanded="false" aria-controls="mobile-nav" aria-label="Menú">
+          <i data-lucide="menu" style="width:24px;height:24px;"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- HERO -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="hero">
+      <div class="hero__grid-bg" aria-hidden="true"></div>
+
+      <div class="hero__inner">
+        <!-- Left: Headline -->
+        <div class="hero__content">
+          <h1 class="hero__headline">
+            <span class="text-blue">Subasta.</span>
+            <span>Gana.</span>
+            <span>Maneja.</span>
+          </h1>
+          <p class="hero__subtitle">
+            La plataforma de subastas de autos más transparente de Latinoamérica.
+            Autos verificados, pujas en tiempo real, sin intermediarios.
+          </p>
+          <div class="hero__cta-group">
+            <a href="subastas.html" class="btn btn--primary btn--lg" data-bid-button>
+              <i data-lucide="gavel" style="width:20px;height:20px;"></i>
+              Ver Subastas en Vivo
+            </a>
+            <a href="#como-funciona" class="btn btn--ghost btn--lg">
+              <i data-lucide="play-circle" style="width:20px;height:20px;"></i>
+              Cómo Funciona
+            </a>
+          </div>
+
+          <!-- Quick stats -->
+          <div style="display: flex; gap: var(--space-8); margin-top: var(--space-4);">
+            <div>
+              <div class="mono" style="font-size: var(--fs-xl); font-weight: 700;">2,847</div>
+              <div style="font-size: var(--fs-xs); color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.1em;">Autos vendidos</div>
+            </div>
+            <div>
+              <div class="mono" style="font-size: var(--fs-xl); font-weight: 700;">$47M</div>
+              <div style="font-size: var(--fs-xs); color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.1em;">En transacciones</div>
+            </div>
+            <div>
+              <div class="mono" style="font-size: var(--fs-xl); font-weight: 700; color: var(--success);">12</div>
+              <div style="font-size: var(--fs-xs); color: var(--neutral-500); text-transform: uppercase; letter-spacing: 0.1em;">En vivo ahora</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Featured live auction card -->
+        <div class="hero__featured">
+          <div class="hero-card">
+            <div class="hero-card__image">
+              <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=700&h=440&fit=crop" alt="2024 Porsche 911 GT3 RS — Subasta en vivo" loading="eager">
+              <span class="hero-card__live-badge badge badge--live">
+                <span class="live-dot" style="width:6px;height:6px;"></span>
+                En Vivo
+              </span>
+              <span class="hero-card__watchers">
+                <i data-lucide="eye" style="width:14px;height:14px;"></i>
+                247 watching
+              </span>
+            </div>
+            <div class="hero-card__body">
+              <h2 class="hero-card__title">2024 Porsche 911 GT3 RS</h2>
+              <div class="hero-card__meta">
+                8,200 km &middot; Lima, Perú &middot; PDK &middot; Weissach Package
+              </div>
+              <div class="hero-card__stats">
+                <div>
+                  <div class="hero-card__stat-label">Puja Actual</div>
+                  <div class="hero-card__stat-value" data-hero-price="289500" style="color: var(--sigma-white);">$289,500</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="hero-card__stat-label">Tiempo Restante</div>
+                  <div class="hero-card__stat-value" data-countdown="" id="hero-countdown" style="font-size: var(--fs-xl);">02:14:37</div>
+                </div>
+              </div>
+              <div style="display: flex; align-items: center; gap: var(--space-2); font-size: var(--fs-xs); color: var(--neutral-500); font-family: var(--font-mono);">
+                <span data-bid-count>67 pujas</span>
+                <span>&middot;</span>
+                <span style="color: var(--sigma-blue-glow);">Reserva alcanzada</span>
+              </div>
+            </div>
+            <div class="hero-card__footer">
+              <span class="mono">+$500 próximo incremento</span>
+              <a href="detalle.html" class="btn btn--primary btn--sm">
+                <i data-lucide="gavel" style="width:14px;height:14px;"></i>
+                Pujar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- BRANDS MARQUEE -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section style="padding: var(--space-8) 0; border-top: var(--border-default); border-bottom: var(--border-default);">
+      <div class="marquee-wrapper">
+        <div class="marquee">
+          <span class="marquee__item">Porsche</span>
+          <span class="marquee__item">BMW</span>
+          <span class="marquee__item">Mercedes-Benz</span>
+          <span class="marquee__item">Audi</span>
+          <span class="marquee__item">Ferrari</span>
+          <span class="marquee__item">Lamborghini</span>
+          <span class="marquee__item">McLaren</span>
+          <span class="marquee__item">Toyota</span>
+          <span class="marquee__item">Nissan</span>
+          <span class="marquee__item">Ford</span>
+          <span class="marquee__item">Chevrolet</span>
+          <span class="marquee__item">Land Rover</span>
+          <!-- Duplicate for seamless loop -->
+          <span class="marquee__item">Porsche</span>
+          <span class="marquee__item">BMW</span>
+          <span class="marquee__item">Mercedes-Benz</span>
+          <span class="marquee__item">Audi</span>
+          <span class="marquee__item">Ferrari</span>
+          <span class="marquee__item">Lamborghini</span>
+          <span class="marquee__item">McLaren</span>
+          <span class="marquee__item">Toyota</span>
+          <span class="marquee__item">Nissan</span>
+          <span class="marquee__item">Ford</span>
+          <span class="marquee__item">Chevrolet</span>
+          <span class="marquee__item">Land Rover</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- ACTIVE AUCTIONS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="subastas-activas">
+      <div class="container container--wide">
+        <div class="section__header reveal" data-stagger>
+          <div class="section__overline reveal">Subastas en vivo</div>
+          <h2 class="section__title reveal">Pujando Ahora</h2>
+          <p class="section__description reveal">Autos verificados con inspección de 150 puntos. Transparencia total en cada transacción.</p>
+        </div>
+
+        <div class="auction-grid" data-stagger>
+
+          <!-- Card 1: Active -->
+          <article class="auction-card reveal" aria-label="Subasta: 2023 BMW M3 Competition">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=340&fit=crop" alt="2023 BMW M3 Competition" loading="lazy">
+              <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2023 BMW M3 Competition</h3>
+              <div class="auction-card__meta">
+                <span>15,200 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Bogotá</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Automático</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$72,800</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono">05:42:18</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>34 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">22 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 78%;"></div></div>
+              <span class="auction-card__reserve-pct mono">78%</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 52%;"></div></div>
+          </article>
+
+          <!-- Card 2: Closing soon -->
+          <article class="auction-card auction-card--closing reveal" aria-label="Subasta por cerrar: 2022 Mercedes-AMG C63 S">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=340&fit=crop" alt="2022 Mercedes-AMG C63 S" loading="lazy">
+              <span class="auction-card__badge badge badge--closing"><i data-lucide="clock" style="width:12px;height:12px;"></i> Por Cerrar</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2022 Mercedes-AMG C63 S</h3>
+              <div class="auction-card__meta">
+                <span>28,400 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>CDMX</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Automático</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$68,400</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono" style="color: var(--warning);">00:08:12</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>51 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">45 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress progress--success"><div class="progress__bar" style="width: 100%;"></div></div>
+              <span class="auction-card__reserve-pct mono" style="color: var(--success);">Met</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 5%; background: var(--danger);"></div></div>
+          </article>
+
+          <!-- Card 3: Active -->
+          <article class="auction-card reveal" aria-label="Subasta: 2021 Audi RS6 Avant">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=340&fit=crop" alt="2021 Audi RS6 Avant" loading="lazy">
+              <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2021 Audi RS6 Avant</h3>
+              <div class="auction-card__meta">
+                <span>38,700 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Santiago</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Automático</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$95,200</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono">01:28:55</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>29 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">31 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 88%;"></div></div>
+              <span class="auction-card__reserve-pct mono">88%</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 35%;"></div></div>
+          </article>
+
+          <!-- Card 4: Active -->
+          <article class="auction-card reveal" aria-label="Subasta: 2020 Toyota GR Supra">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&h=340&fit=crop" alt="2020 Toyota GR Supra" loading="lazy">
+              <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2020 Toyota GR Supra 3.0</h3>
+              <div class="auction-card__meta">
+                <span>42,100 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Lima</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Automático</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$48,700</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono">03:55:02</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>18 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">14 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 55%;"></div></div>
+              <span class="auction-card__reserve-pct mono">55%</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 62%;"></div></div>
+          </article>
+
+          <!-- Card 5: Active -->
+          <article class="auction-card reveal" aria-label="Subasta: 2019 Nissan GT-R Nismo">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?w=600&h=340&fit=crop" alt="2019 Nissan GT-R Nismo" loading="lazy">
+              <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2019 Nissan GT-R Nismo</h3>
+              <div class="auction-card__meta">
+                <span>22,000 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Buenos Aires</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Automático</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$142,000</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono">06:12:44</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>56 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">38 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress progress--success"><div class="progress__bar" style="width: 100%;"></div></div>
+              <span class="auction-card__reserve-pct mono" style="color: var(--success);">Met</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 74%;"></div></div>
+          </article>
+
+          <!-- Card 6: Active -->
+          <article class="auction-card reveal" aria-label="Subasta: 2023 Ford Mustang Dark Horse">
+            <div class="auction-card__image">
+              <img src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=600&h=340&fit=crop" alt="2023 Ford Mustang Dark Horse" loading="lazy">
+              <span class="auction-card__badge badge badge--live"><span class="live-dot" style="width:6px;height:6px;"></span> En Vivo</span>
+              <span class="auction-card__flag"><i data-lucide="flag" style="width:20px;height:20px;"></i></span>
+            </div>
+            <div class="auction-card__body">
+              <h3 class="auction-card__title">2023 Ford Mustang Dark Horse</h3>
+              <div class="auction-card__meta">
+                <span>5,800 km</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Monterrey</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span>Manual</span>
+              </div>
+              <div class="auction-card__stats">
+                <div>
+                  <div class="auction-card__stat-label">Puja Actual</div>
+                  <div class="auction-card__stat-value mono">$62,500</div>
+                </div>
+                <div style="text-align: right;">
+                  <div class="auction-card__stat-label">Tiempo</div>
+                  <div class="auction-card__stat-value mono">04:22:09</div>
+                </div>
+              </div>
+              <div class="auction-card__bid-info">
+                <span>42 pujas</span>
+                <span class="auction-card__meta-sep">&middot;</span>
+                <span class="watchers">27 <i data-lucide="eye" style="width:12px;height:12px;vertical-align:-2px;"></i></span>
+              </div>
+            </div>
+            <div class="auction-card__footer">
+              <span class="auction-card__reserve-label">Reserva</span>
+              <div class="auction-card__reserve-bar progress"><div class="progress__bar" style="width: 71%;"></div></div>
+              <span class="auction-card__reserve-pct mono">71%</span>
+            </div>
+            <div class="auction-card__time-bar"><div class="auction-card__time-bar-fill" style="width: 48%;"></div></div>
+          </article>
+
+        </div>
+
+        <!-- View all CTA -->
+        <div style="text-align: center; margin-top: var(--space-10);">
+          <a href="subastas.html" class="btn btn--outline btn--lg">
+            Ver Todas las Subastas
+            <i data-lucide="arrow-right" style="width:18px;height:18px;"></i>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- STATS BANNER -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="section section--dark">
+      <div class="container container--wide">
+        <div class="stats-banner reveal">
+          <div class="stats-banner__item">
+            <div class="stats-banner__number">2,847</div>
+            <div class="stats-banner__label">Autos Vendidos</div>
+          </div>
+          <div class="stats-banner__item">
+            <div class="stats-banner__number">$47M</div>
+            <div class="stats-banner__label">Transacciones USD</div>
+          </div>
+          <div class="stats-banner__item">
+            <div class="stats-banner__number">18,500+</div>
+            <div class="stats-banner__label">Usuarios Registrados</div>
+          </div>
+          <div class="stats-banner__item">
+            <div class="stats-banner__number">4.9<span style="font-size: var(--fs-lg); color: var(--warning);">/5</span></div>
+            <div class="stats-banner__label">Satisfacción</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- HOW IT WORKS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="section" id="como-funciona">
+      <div class="container container--wide">
+        <div class="section__header reveal" data-stagger>
+          <div class="section__overline reveal">Proceso simple</div>
+          <h2 class="section__title reveal">Cómo Funciona</h2>
+          <p class="section__description reveal">De la búsqueda a las llaves en tu mano. Sin letras chicas, sin intermediarios ocultos.</p>
+        </div>
+
+        <div class="steps-grid" data-stagger>
+          <div class="step reveal">
+            <div class="step__icon" style="margin-bottom: var(--space-3); color: var(--sigma-blue);">
+              <i data-lucide="search" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 class="step__title">Explora</h3>
+            <p class="step__description">Navega subastas activas con filtros por marca, año, precio y ubicación. Cada auto tiene inspección de 150 puntos.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step__icon" style="margin-bottom: var(--space-3); color: var(--sigma-blue);">
+              <i data-lucide="user-check" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 class="step__title">Regístrate</h3>
+            <p class="step__description">Crea tu cuenta, verifica tu identidad y deposita la garantía. En menos de 5 minutos estás listo para pujar.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step__icon" style="margin-bottom: var(--space-3); color: var(--sigma-blue);">
+              <i data-lucide="gavel" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 class="step__title">Puja en Vivo</h3>
+            <p class="step__description">Haz tus ofertas en tiempo real. Ve quién puja, cuánto falta y cuándo cierra. Sin extensiones sorpresa.</p>
+          </div>
+          <div class="step reveal">
+            <div class="step__icon" style="margin-bottom: var(--space-3); color: var(--sigma-blue);">
+              <i data-lucide="trophy" style="width:28px;height:28px;"></i>
+            </div>
+            <h3 class="step__title">Gana y Recibe</h3>
+            <p class="step__description">Si ganas, coordinamos la transferencia y el envío. Escrow seguro hasta que recibas el auto. Garantía incluida.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TESTIMONIALS -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="section section--dark">
+      <div class="container container--wide">
+        <div class="section__header reveal" data-stagger>
+          <div class="section__overline reveal">Comunidad</div>
+          <h2 class="section__title reveal">Lo que Dicen</h2>
+        </div>
+
+        <div class="testimonial-grid" data-stagger>
+          <div class="testimonial reveal">
+            <p class="testimonial__quote">"Compré un M4 Competition a precio justo. El proceso fue transparente de principio a fin. La inspección del auto fue exacta — ni un rayón sin documentar."</p>
+            <div class="testimonial__author">
+              <span class="avatar" style="background: rgba(10, 79, 232, 0.2); color: var(--sigma-blue-glow);">CR</span>
+              <div>
+                <div class="testimonial__name">Carlos R.</div>
+                <div class="testimonial__role">Comprador · Lima, Perú</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial reveal">
+            <p class="testimonial__quote">"Vendí mi GT3 en 4 días. 89 pujas, precio final superior al que esperaba. La adrenalina de ver las pujas subir en vivo es real. Mejor que cualquier concesionario."</p>
+            <div class="testimonial__author">
+              <span class="avatar" style="background: rgba(16, 185, 129, 0.2); color: var(--success);">MA</span>
+              <div>
+                <div class="testimonial__name">María A.</div>
+                <div class="testimonial__role">Vendedora · Bogotá, Colombia</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial reveal">
+            <p class="testimonial__quote">"La mejor plataforma para autos usados en LATAM. El escrow da confianza real. Ya llevo 3 compras y 1 venta. La app del timer con las notificaciones es adictiva."</p>
+            <div class="testimonial__author">
+              <span class="avatar" style="background: rgba(245, 158, 11, 0.2); color: var(--warning);">JD</span>
+              <div>
+                <div class="testimonial__name">Jorge D.</div>
+                <div class="testimonial__role">Comprador y vendedor · CDMX, México</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- CTA SECTION -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <section class="cta-section">
+      <div class="cta-section__bg" aria-hidden="true"></div>
+      <div class="container" style="position: relative; z-index: 1;">
+        <div class="reveal" data-stagger>
+          <h2 class="reveal" style="font-family: var(--font-display); font-size: var(--fs-2xl); text-transform: uppercase; margin-bottom: var(--space-4);">
+            <span class="text-blue">Tu próximo auto</span> te está esperando
+          </h2>
+          <p class="reveal" style="font-size: var(--fs-lg); color: var(--neutral-400); max-width: 550px; margin: 0 auto var(--space-8);">
+            Regístrate gratis y comienza a pujar hoy. Sin compromisos, sin costos ocultos.
+          </p>
+          <div class="reveal" style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+            <a href="#" class="btn btn--primary btn--xl" data-bid-button>
+              <i data-lucide="user-plus" style="width:20px;height:20px;"></i>
+              Crear Cuenta Gratis
+            </a>
+            <a href="subastas.html" class="btn btn--outline btn--xl">
+              Explorar Subastas
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FOOTER -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="container container--wide">
+      <div class="site-footer__inner">
+        <div class="site-footer__brand">
+          <div class="site-footer__brand-name">
+            <span style="color: var(--sigma-blue);">SIGMA</span> AUTOS
+          </div>
+          <p class="site-footer__brand-desc">
+            La plataforma de subastas de autos más transparente de Latinoamérica. Cada auto verificado, cada puja en tiempo real.
+          </p>
+        </div>
+        <div>
+          <h3 class="site-footer__col-title">Plataforma</h3>
+          <a href="subastas.html" class="site-footer__link">Subastas en vivo</a>
+          <a href="#" class="site-footer__link">Resultados</a>
+          <a href="vender.html" class="site-footer__link">Vender mi auto</a>
+          <a href="#" class="site-footer__link">Precios y comisiones</a>
+        </div>
+        <div>
+          <h3 class="site-footer__col-title">Soporte</h3>
+          <a href="#" class="site-footer__link">Centro de ayuda</a>
+          <a href="#" class="site-footer__link">Cómo funciona</a>
+          <a href="#" class="site-footer__link">Términos y condiciones</a>
+          <a href="#" class="site-footer__link">Privacidad</a>
+        </div>
+        <div>
+          <h3 class="site-footer__col-title">Contacto</h3>
+          <a href="#" class="site-footer__link">soporte@sigmaautos.com</a>
+          <a href="#" class="site-footer__link">+52 55 1234 5678</a>
+          <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+            <a href="#" aria-label="Instagram" style="color: var(--neutral-500); transition: color 0.15s;">
+              <i data-lucide="instagram" style="width:20px;height:20px;"></i>
+            </a>
+            <a href="#" aria-label="Twitter / X" style="color: var(--neutral-500); transition: color 0.15s;">
+              <i data-lucide="twitter" style="width:20px;height:20px;"></i>
+            </a>
+            <a href="#" aria-label="YouTube" style="color: var(--neutral-500); transition: color 0.15s;">
+              <i data-lucide="youtube" style="width:20px;height:20px;"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="site-footer__bottom">
+        <span>&copy; 2025 SIGMA AUTOS. Todos los derechos reservados.</span>
+        <span class="mono" style="font-size: 11px;">v1.0.0 · Build 2025.04</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts (ES modules) -->
+  <script type="module" src="scripts/main.js"></script>
+
+  <!-- Hero countdown init (inline, needs specific end time) -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set hero countdown to ~2h 14m from now
+      const heroCountdown = document.getElementById('hero-countdown');
+      if (heroCountdown) {
+        const endTime = Date.now() + (2 * 3600 + 14 * 60 + 37) * 1000;
+        heroCountdown.dataset.countdown = endTime;
+      }
+    });
+  </script>
+
+</body>
+</html>
